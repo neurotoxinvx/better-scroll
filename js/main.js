@@ -17,7 +17,7 @@ $(document).ready(function() {
   
   $('a').on('click', function(){
     var hash = $(this)[0].hash
-
+    console.log(hash)
     if (hash && hash == "#documents") {
       $('.panel-cover').addClass('panel-cover--collapsed');
     }
