@@ -7,7 +7,7 @@ $(document).ready(function() {
     $('.content-wrapper').addClass('animated slideInLeft');
   });
 
-  if (window.location.hash && window.location.hash == "#blog") {
+  if (window.location.hash && window.location.hash == "#documents") {
     $('.panel-cover').addClass('panel-cover--collapsed');
   }
 
@@ -15,9 +15,10 @@ $(document).ready(function() {
   //   $('.panel-cover').addClass('panel-cover--collapsed');
   // }
   
-  $('body').on('click', function(){
-    console.log(window.location.hash)
-    if (window.location.hash && window.location.hash == "#blog") {
+  $('a').on('click', function(){
+    var hash = $(this)[0].hash
+
+    if (hash && hash == "#documents") {
       $('.panel-cover').addClass('panel-cover--collapsed');
     }
   })
