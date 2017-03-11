@@ -16,6 +16,7 @@ $(document).ready(function() {
   // }
   
   $('body').on('click', function(){
+    console.log(window.location.hash)
     if (window.location.hash && window.location.hash == "#blog") {
       $('.panel-cover').addClass('panel-cover--collapsed');
     }
