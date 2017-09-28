@@ -1,154 +1,73 @@
 # better-scroll
-[![npm](https://img.shields.io/npm/v/better-scroll.svg?style=flat-square)](https://www.npmjs.com/package/better-scroll)
 
-inspired by iscroll, and it has a better scroll perfermance https://ustbhuangyi.github.io/better-scroll/
+[![npm](https://img.shields.io/npm/v/better-scroll.svg?style=flat-square)](https://www.npmjs.com/package/better-scroll) [![Build Status](https://travis-ci.org/ustbhuangyi/better-scroll.svg?branch=master)](https://travis-ci.org/ustbhuangyi/better-scroll) [![codecov.io](http://codecov.io/github/ustbhuangyi/better-scroll/coverage.svg?branch=master)](http://codecov.io/github/ustbhuangyi/better-scroll)
 
-## 立即使用
+## What is better-scroll ?
 
-```HTML
-<body>
-  <div id="wrapper">
-    <ul>
-	   <li>...</li>
-	   <li>...</li>
-	   ...
-    </ul>
-  </div>
-<script type="text/javascript" src="better-scroll.js"></script>
-<script type="text/javascript">
-  new BScroll(document.getElementById('wrapper'));
-</script>
-</body>
+better-scroll is a plugin which is aimed at solving scrolling circumstances on the mobile side (perhaps supporting the PC side in the future). The core is inspired by the implementation of [iscroll](https://github.com/cubiq/iscroll), so the APIs of better-scroll are compatible with iscroll on the whole. What's more, better-scroll also extends some features and optimizes for performance based on iscroll.
+
+better-scroll is implemented with plain JavaScript, which means it's dependency free. The size of compiled code is 46 KB, 26 KB after compressed, and only 7KB after gzip. better-scroll is a really lightweight JavaScript lib.
+
+## Getting started
+
+The best way to learn and use better-scroll is by viewing its demo. We have put all the code in [example](https://github.com/ustbhuangyi/better-scroll/tree/master/example) directory. Considering that one of the most suitable JavaScript MVVM framework for mobile development currently is [Vue](https://github.com/vuejs/vue), and better-scroll can be applied in conjunction with Vue very well, so I rewrote the demo with Vue.
+
+The most common application scenario of better-scroll is list scrolling. Let's see its HTML:
+
+```html
+<div class="wrapper">
+  <ul class="content">
+    <li>...</li>
+    <li>...</li>
+    ...
+  </ul>
+  <!-- you can put some other DOMs here, it won't affect the scrolling
+</div>
 ```
 
-搞定 !
+In the code above, better-scroll is applied to the outer `wrapper` container, and the scrolling part is `content` element. Pay attention that better-scroll only handles the scroll of the first child element (content) of the container (`wrapper`), which means other elements will be ignored.
 
-## 通过npm引入
-
-安装better-scroll
-
-```shell
-npm install better-scroll --save-dev
-```
-引入better-scroll
+The simplest initialization code is as follow:
 
 ```javascript
 import BScroll from 'better-scroll'
+const wrapper = document.querySelector('.wrapper')
+const scroll = new BScroll(wrapper)
 ```
 
->如果不支持import, 请使用
+bettor-scroll provides a class whose first parameter is a plain DOM object when instantiated. Certainly, better-scroll inside would try to use querySelector to get the DOM object, so the initiazation code can also be like the following:
 
 ```javascript
-var BScroll = require('better-scroll')
+import BScroll from 'better-scroll'
+const scroll = new BScroll('.wrapper')
 ```
 
-## DEMO
-better-scroll 的源码是基于 Webpack 构建的
+## The core of scrolling
 
-首先，clone项目源码
+Many developers have used better-scroll, but the most common problem they have met is:
 
-```shell
-git clone https://github.com/ustbhuangyi/better-scroll.git
-```
+> I have initiated better-scroll, but the content can't scroll.
 
-安装依赖
+The phenomenon is 'the content can't scroll' and we need to figure out the root cause. Before that, let's take a look at the browser's scrolling principle: everyone can see the browser's scroll bar. When the height of the page content exceeds the viewport height, the vertical scroll bar will appear; When the width of page content exceeds the viewport width, the horizontal bar will appear. That is to say, when the viewport can't display all the content, the browser would guide the user to scroll the screen with scroll bar to see the rest of content.
 
-```shell
-cd better-scroll
-npm install
-```
+The principle of bett-scroll is samed as the browser. We can feel about this more obviously using a picture:
 
-测试demo页
+![布局](http://static.galileo.xiaojukeji.com/static/tms/shield/scroll-4.png)
 
-```shell
-npm run dev
-```
+The green part is the wrapper, also known as the parent container, which has **fixed height**. The yellow part is the content, which is **the first child element** of the parent container and whose height would grow with the size of its content. Then, when the height of the content doesn't exceed the height of the parent container, the content would not scroll. Once exceeded, the content can be scrolled. That is the principle of better-scroll.
 
-打开浏览器访问如下地址, 查看效果
+## Using better-scroll with MVVM frameworks
 
-> localhost:9090
+I wrote an article [When better-scroll meets Vue](https://zhuanlan.zhihu.com/p/27407024) (in Chinese). I also hope that developers can contribute to share the experience of using better-scroll with other frameworks.
 
-## Options 参数
+## Document
 
-Example:
+Visit [better-scroll document](https://ustbhuangyi.github.io/better-scroll/doc/)
 
-```javascript
-let scroll = new BScroll(document.getElementById('wrapper'), {
-  startX: 0,
-  startY: 0
-})
-```
+## Demo
 
-Options List:
+Visit [Demo](https://ustbhuangyi.github.io/better-scroll/)
 
-- startX: `0` 开始的X轴位置
-- startY: `0` 开始的Y轴位置
-- scrollY: `true` 滚动方向
-- click: `true` 是否启用click事件
-- directionLockThreshold: `5`
-- momentum: `true` 是否开启拖动惯性
-- bounce: `true` 是否启用弹力动画效果，关掉可以加速
-- selectedIndex: `0` 
-- rotate: `25` 
-- wheel: `false` 该属性是给 picker 组件使用的，普通的列表滚动不需要配置
-- snap: `false` 是否开启捕捉元素，当为 true 时，捕捉的元素会根据可滚动的位置和滚动区域计算得到可滑动几页。
-- snapLoop: `false` 是否创建当前滚动元素子集的拷贝
-- snapThreshold: `0.1` 滑动的长度限制，只有大于这个距离才会触发事件
-- swipeTime: `2500` swipe 持续时间
-- bounceTime: `700` 弹力动画持续的毫秒数
-- adjustTime: `400`
-- swipeBounceTime: `1200`
-- deceleration: `0.001` 滚动动量减速越大越快，建议不大于0.01
-- momentumLimitTime: `300` 惯性拖动的回弹时间
-- momentumLimitDistance: `15` 惯性拖动的回弹距离
-- resizePolling: `60` 重新调整窗口大小时，重新计算better-scroll的时间间隔
-- probeType: `1` 监听事件的触发时间，1为即时触发，3为延迟到事件完毕后触发
-- preventDefault: `true` 是否阻止默认事件
-- preventDefaultException: `{ tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/ }` 阻止默认事件
-- HWCompositing: `true` 是否启用硬件加速
-- useTransition: `true` 是否使用CSS3的Transition属性，否则使用-requestAnimationFram代替
-- useTransform: `true` 是否使用CSS3的Transform属性
-- probeType: `1` 滚动的时候会派发scroll事件，会截流。`2`滚动的时候实时派发scroll事件，不会截流。 `3`除了实时派发scroll事件，在swipe的情况下仍然能实时派发scroll事件
+Or scan QR Code：
 
-## Events 事件
-
-Example:
-
-```javascript
-let scroll = new BScroll(document.getElementById('wrapper'),{
-   probeType: 3
-})
-
-scroll.on('scroll', (pos) => {
-  console.log(pos.x + '~' + posx.y)
-  ...
-})
-```
-
-Events 列表
-
-- beforeScrollStart - 滚动开始之前触发
-- scrollStart - 滚动开始时触发
-- scroll - 滚动时触发
-- scrollCancel - 取消滚动时触发
-- scrollEnd - 滚动结束时触发
-- flick - 触发了 fastclick 时的回调函数
-- refresh - 当 better-scroll 刷新时触发
-- destroy - 销毁 better-scroll 实例时触发
-
-
-## 派发滚动
-
-- scrollTo(x, y, time, easing) 滚动到某个位置，x,y 代表坐标，time 表示动画时间，easing 表示缓动函数
-
-Example:
-
-```javascript
-let scroll = new BScroll(document.getElementById('wrapper'))
-scroll.scrollTo(0, 500)
-...
-```
-- scrollToElement(el, time, offsetX, offsetY, easing) 滚动到
-  某个元素，el（必填）表示 dom 元素，time 表示动画，offsetX 和 offsetY 表示坐标偏移量，easing 表示缓动函数
-
-
+![QR Code](https://qr.api.cli.im/qr?data=https%253A%252F%252Fustbhuangyi.github.io%252Fbetter-scroll%252F&level=H&transparent=false&bgcolor=%23ffffff&forecolor=%23000000&blockpixel=12&marginblock=1&logourl=&size=280&kid=cliim&key=0da6b5bf346079bafa07f6935dc996bd)

@@ -1,28 +1,13 @@
-export function extend(target, source) {
-	for (var key in source) {
-		target[key] = source[key];
-	}
-};
+export function getNow() {
+  return window.performance && window.performance.now ? (window.performance.now() + window.performance.timing.navigationStart) : +new Date()
+}
 
-const DEFAULT_INTERVAL = 100 / 60;
-
-export const requestAnimationFrame = (() => {
-	return window.requestAnimationFrame ||
-		window.webkitRequestAnimationFrame ||
-		window.mozRequestAnimationFrame ||
-		window.oRequestAnimationFrame ||
-		// if all else fails, use setTimeout
-		function (callback) {
-			return window.setTimeout(callback, (callback.interval || DEFAULT_INTERVAL) / 2); // make interval as precise as possible.
-		};
-})();
-
-export const cancelAnimationFrame = (() => {
-	return window.cancelAnimationFrame ||
-		window.webkitCancelAnimationFrame ||
-		window.mozCancelAnimationFrame ||
-		window.oCancelAnimationFrame ||
-		function (id) {
-			window.clearTimeout(id);
-		};
-})();
+export function extend(target, ...rest) {
+  for (let i = 0; i < rest.length; i++) {
+    let source = rest[i]
+    for (let key in source) {
+      target[key] = source[key]
+    }
+  }
+  return target
+}
